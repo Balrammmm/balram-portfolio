@@ -1,0 +1,10 @@
+.git/
+.next/
+node_modules/
+work/
+*.tsbuildinfo
+*.log
+.env*
+({id
+e.className)})
+innerWidth

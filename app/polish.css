@@ -1,0 +1,51 @@
+.signature-mark{color:var(--paper);width:150px;display:inline-flex;flex-direction:column;align-items:center;}
+.story-journey{opacity:0;}
+.signature-mark svg{width:100%;height:auto;display:block;overflow:visible;}
+.signature-mark small{font:500 7px/1.7 Manrope,sans-serif!important;letter-spacing:.17em!important;margin:0!important;white-space:nowrap;}
+.hero-details .signature{bottom:5%;}.hero-details .signature-mark{width:126px;}
+.about-signature .signature-mark{width:120px;}.closing-signature .signature-mark{width:clamp(160px,17vw,280px);}
+.hero-utilities{position:absolute;left:26%;right:19%;bottom:3.3%;display:flex;align-items:center;justify-content:center;gap:clamp(12px,1.5vw,30px);pointer-events:auto;z-index:14;}
+.hero-utilities>a,.hero-utilities>button,.hero-utilities .resume-trigger{font:500 9px/1.4 Manrope,sans-serif;letter-spacing:.07em;min-height:44px;display:inline-flex;align-items:center;padding:0;color:#bcbcb3;text-transform:uppercase;white-space:nowrap;}
+.hero-utilities .resume-control{position:relative;left:auto;bottom:auto;transform:none;}
+.hero-utilities .resume-selector{bottom:100%;}.resume-view{font-size:8px;letter-spacing:.08em;min-height:44px;border-top:1px solid var(--hairline);width:100%;text-align:left;color:var(--gold);}
+.shortcut-curtain{position:fixed;inset:0;z-index:99;pointer-events:none;opacity:0;background:#0a0a0a66;}
+.shortcut-curtain svg{width:100%;height:100%;}.shortcut-curtain path{fill:none;stroke:var(--gold);stroke-width:1;vector-effect:non-scaling-stroke;}
+.project-viewport .project-bridge{left:0;top:0;width:100%;height:100%;background:none;transform-origin:center;}.project-viewport .project-bridge path{fill:none;stroke:var(--gold);stroke-width:1;vector-effect:non-scaling-stroke;}
+.journey-line{opacity:.16;}.contact-links a,.contact-email{transition:color .4s var(--ease-out),border-color .4s;}.contact-links a{padding-inline:2px;}.contact-email:hover,.contact-links a:hover{color:var(--gold);border-color:var(--gold);}
+.finance-annotations{position:absolute;left:49%;right:8%;bottom:19%;display:flex;justify-content:space-between;gap:16px;pointer-events:none;opacity:0;visibility:hidden;}
+.finance-annotations span{font-size:9px;letter-spacing:.12em;color:#b9ae99;}.finance-annotations small{display:block;font-size:8px;color:var(--muted);margin-top:8px;letter-spacing:.04em;}
+@media(hover:hover){.hero-utilities>a:hover,.hero-utilities>button:hover,.hero-utilities .resume-trigger:hover{color:var(--gold);}}
+@media(max-width:1000px){.hero-utilities{left:22%;right:19%;gap:12px;}.hero-utilities>a,.hero-utilities>button,.hero-utilities .resume-trigger{font-size:8px;}.hero-details .signature-mark{width:100px;}}
+@media(max-width:700px){.hero-utilities{left:24px;right:24px;bottom:1%;gap:0;justify-content:space-between;}.hero-utilities>a,.hero-utilities>button,.hero-utilities .resume-trigger{font-size:8px;letter-spacing:0;}.hero-scroll{bottom:7.4%;}.hero-details .signature{bottom:7.2%;}.hero-details .signature-mark{width:86px;}.signature-mark small{font-size:5px!important;}.about-signature .signature-mark{width:95px;}.closing-signature .signature-mark{width:145px;}.finance-annotations{left:28px;right:28px;bottom:13%;}.finance-annotations span{font-size:8px;}.finance-annotations small{font-size:7px;}.hero-utilities .resume-selector{left:auto;right:-68px;transform:none;width:290px;max-width:calc(100vw - 48px);}.contact-links{gap:24px;}.closing-signature{bottom:14%;}}
+@media(max-width:700px) and (max-height:720px){.contact-copy{top:13%;}.contact .story-quote{margin-top:16px;}.contact-email{margin-top:16px;}.contact-links{margin-top:8px;}.closing-signature .signature-mark{width:110px;}.closing-signature{bottom:13%;}}
+@media(prefers-reduced-motion:reduce){.hero-utilities a,.contact-links a,.contact-email{transition:none;}}
+
+.thinking-copy{opacity:0;visibility:hidden;}
+
+/* One header component, positioned against each full-viewport scene. */
+.global-header{position:absolute;inset:24px 0 auto;height:48px;z-index:30;pointer-events:auto;color:var(--paper);}
+.global-brand{position:absolute;left:var(--margin);top:0;font:400 29px/44px Editorial,Georgia,serif;letter-spacing:-.1em;width:44px;text-align:left;}
+.global-header nav{position:absolute;left:50vw;top:0;transform:translateX(-50%);display:flex;align-items:center;gap:clamp(20px,2.1vw,40px);white-space:nowrap;}
+.global-header nav button{min-height:44px;font-size:9px;letter-spacing:.12em;color:#bcbcb3;transition:color .4s var(--ease-out);}
+.global-header nav button[aria-current=page],.global-header nav button:hover{color:var(--paper);}
+.global-identity{position:absolute;right:var(--margin);top:16px;font-size:7px;letter-spacing:.15em;color:var(--muted);white-space:nowrap;}
+.shortcut-curtain{z-index:110;}
+.hero-details .signature{bottom:5%;}.hero-scroll{bottom:5%;}
+.project-stage-list .journey-return{width:auto;min-width:70px;opacity:1;font-size:8px;}.project-stage-list .journey-return:before{display:none;}
+.story-footer .story-pause{display:none;}.story-footer .story-return{font-size:8px;}
+.resume-portal .portal-entry{height:100%;display:flex;flex-direction:column;justify-content:space-between;}.resume-portal .portal-entry>.portal-index{font:400 10px/1.5 Manrope,sans-serif;color:var(--gold);}.resume-portal .portal-entry>small{font-size:8px;}
+.philosopher-image{position:absolute;inset:0;pointer-events:none;transform-origin:50% 55%;isolation:isolate;}
+.statue-aura{position:absolute;inset:12% 8% -2%;opacity:0;background:radial-gradient(ellipse at 51% 58%,rgba(201,169,110,.045),rgba(201,169,110,.012) 39%,transparent 70%);}
+.statue-frame{position:absolute;left:50%;bottom:0;width:min(100%,72vh);aspect-ratio:1.125;overflow:visible;transform:translateX(-50%);z-index:1;opacity:0;}
+.sculpture-orbit{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none;}
+.sculpture-orbit path{fill:none;stroke:#b5a58b;stroke-width:.8;vector-effect:non-scaling-stroke;stroke-linecap:round;stroke-dasharray:1;opacity:0;}
+.orbit-back{z-index:0;}.orbit-front{z-index:2;}
+/* The full-height source must not enlarge its aspect-ratio frame before cropping. */
+.statue-frame img{position:absolute;top:0;left:0;display:block;width:100%;height:auto;max-width:none;transform:translateY(-49%);filter:brightness(.86) contrast(1.05) drop-shadow(-.65px -.2px 1px rgba(201,169,110,.13)) drop-shadow(8px 12px 22px rgba(0,0,0,.28));}
+.finance-philosophy canvas{position:absolute;inset:0;}.finance-philosophy .thinking-fallback{position:absolute;left:10%;right:10%;top:40%;text-align:center;font-size:10px;line-height:2;}
+.finance-philosophy[data-unavailable=true] .thinking-fallback{display:block;}
+@media(max-width:1000px){.global-header nav{gap:18px;}.global-header nav button{font-size:8px;}.global-identity{font-size:6px;max-width:140px;white-space:normal;text-align:right;line-height:1.8;top:8px;}.global-brand{font-size:26px;}}
+@media(max-width:700px){.global-header{top:12px;height:88px;}.global-header nav{top:35px;gap:20px;}.global-header nav button{font-size:8px;letter-spacing:.08em;}.global-brand{font-size:25px;line-height:36px;}.global-identity{top:9px;font-size:6px;max-width:none;white-space:nowrap;letter-spacing:.12em;}.hero-details .signature{bottom:4%;}.hero-scroll{bottom:5%;}.project-stage-list{gap:6px;}.project-stage-list .journey-return{font-size:7px;min-width:58px;}.project-footer .project-next{font-size:7px;letter-spacing:.05em;}.project-stage-list button{width:24px;}.project-stage-list button[data-current=true]:before{width:24px;}.story-footer .story-return{font-size:7px;letter-spacing:0;}.story-footer>div span{max-width:65px;line-height:1.4;}.statue-frame{width:min(100%,42vh);}.finance-annotations{bottom:14%;}.resume-portal .portal-entry>small{font-size:7px;}}
+@media(max-width:360px){.global-header nav{gap:14px;}.global-identity{font-size:5px;}}
+@media(prefers-reduced-motion:reduce){.global-header nav button{transition:none;}}
+@media(max-width:700px){.story-intro{top:max(14%,108px);}.project-viewport .project-copy{top:max(13%,108px);}.project-viewport:is([data-project=neo],[data-project=quadcopter])[data-phase="1"] .project-copy{top:max(12%,108px);}.mind-editorial h2{top:max(13%,108px);}}
