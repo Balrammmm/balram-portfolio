@@ -61,7 +61,7 @@ export default function Continuation({initialChapter=0,returnLabel='ORBIT',onRet
    // Lenis owns smoothing; a second scrub tween added lag to every button/scroll.
    const tween=gsap.fromTo(value,{position:0},{position:12.5,ease:'none',onUpdate:update,scrollTrigger:{trigger:content,scroller:el,start:'top top',end:'bottom bottom',scrub:true,invalidateOnRefresh:true}});
    value.position=entryPosition;update();
-   const refresh=requestAnimationFrame(()=>{ScrollTrigger.refresh();lenis.scrollTo((content.offsetHeight-el.clientHeight)*entryPosition/12.5,{immediate:true});tween.scrollTrigger?.update();tween.scrollTrigger?.getTween()?.progress(1);update();readyRef.current?.();});
+   const refresh=requestAnimationFrame(()=>{ScrollTrigger.refresh();lenis.scrollTo((content.offsetHeight-el.clientHeight)*entryPosition/12.5,{immediate:true});tween.scrollTrigger?.update();update();readyRef.current?.();});
    return()=>{cancelAnimationFrame(refresh);enter.kill();portalEnter?.kill();tween.scrollTrigger?.kill();tween.kill();gsap.ticker.remove(ticker);lenis.destroy();};
   },el);
   focusTimer=window.setTimeout(()=>el.querySelector<HTMLButtonElement>('.story-return')?.focus({preventScroll:true}),100);
