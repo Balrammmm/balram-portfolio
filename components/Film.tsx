@@ -30,6 +30,19 @@ export default function Film() {
   const origin=useRef<{kind:'hero'|'about'|'orbit';scroll:number;focus:HTMLElement|null}>({kind:'orbit',scroll:0,focus:null});
   const shortcut=useRef<gsap.core.Timeline|null>(null),shortcutBusy=useRef(false),curtain=useRef<HTMLDivElement>(null);
   const restoreRef=useRef<()=>void>(()=>{});
+  function resetShortcutCurtain(){
+    const overlay=curtain.current;if(!overlay)return;
+    gsap.set(overlay,{autoAlpha:0});
+    const path=overlay.querySelector('path');if(path)gsap.set(path,{strokeDashoffset:1});
+  }
+  function revealShortcutDestination(){
+    if(!shortcutBusy.current)return;
+    // The lazy-loaded destination owns readiness; never leave its entrance
+    // covered by the shortcut signal, or uncover an unmounted destination.
+    shortcut.current?.kill();
+    shortcut.current=gsap.timeline({onComplete:()=>{resetShortcutCurtain();shortcutBusy.current=false;}})
+      .to(curtain.current,{autoAlpha:0,duration:state.current.reduced?.1:.35,ease:'power2.out'});
+  }
   function remember(view:'story'|'project',index:number,kind:'hero'|'about'|'orbit'){
     const focused=document.activeElement as HTMLElement|null;
     origin.current={kind,scroll:window.scrollY,focus:focused?.closest('.resume-control')?.querySelector<HTMLButtonElement>('.resume-trigger')||focused};
@@ -39,14 +52,14 @@ export default function Film() {
     if(shortcutBusy.current)return;
     if(project!==null||story!==null){
       shortcutBusy.current=true;shortcut.current?.kill();
-      shortcut.current=gsap.timeline().set(curtain.current,{opacity:1}).fromTo(curtain.current!.querySelector('path'),{strokeDashoffset:1600},{strokeDashoffset:0,duration:state.current.reduced?.1:.8,ease:'power2.inOut'},0).to('.story-journey,.project-journey',{opacity:.2,duration:state.current.reduced?.1:.6},0).call(()=>{history.replaceState({...history.state,portfolio:{view:'story',index:chapter,kind:origin.current.kind}},'',`#act-${chapter+3}`);setProject(null);setStory(chapter);setStoryVisit(v=>v+1);shortcutBusy.current=false;}).to(curtain.current,{opacity:0,duration:.3});
+      shortcut.current=gsap.timeline().set(curtain.current,{autoAlpha:1}).fromTo(curtain.current!.querySelector('path'),{strokeDashoffset:1},{strokeDashoffset:0,duration:state.current.reduced?.1:.8,ease:'power2.inOut'},0).to('.story-journey,.project-journey',{opacity:.2,duration:state.current.reduced?.1:.6},0).call(()=>{history.replaceState({...history.state,portfolio:{view:'story',index:chapter,kind:origin.current.kind}},'',`#act-${String(chapter+3).padStart(2,'0')}`);setProject(null);setStory(chapter);setStoryVisit(v=>v+1);});
       return;
     }
     shortcutBusy.current=true;remember('story',chapter,activeRef.current===1?'about':activeRef.current===2?'orbit':'hero');lenis.current?.stop();
     const duration=state.current.reduced?.1:.9;
-    shortcut.current?.kill();shortcut.current=gsap.timeline().set(curtain.current,{opacity:1})
-      .fromTo(curtain.current!.querySelector('path'),{strokeDasharray:1600,strokeDashoffset:1600},{strokeDashoffset:0,duration,ease:'power2.inOut'},0)
-      .to(root.current,{opacity:.38,duration},0).call(()=>{setStory(chapter);shortcutBusy.current=false;});
+    shortcut.current?.kill();shortcut.current=gsap.timeline().set(curtain.current,{autoAlpha:1})
+      .fromTo(curtain.current!.querySelector('path'),{strokeDashoffset:1},{strokeDashoffset:0,duration,ease:'power2.inOut'},0)
+      .to(root.current,{opacity:.38,duration},0).call(()=>setStory(chapter));
   }
   function globalNavigate(target:NavTarget){
     if(target==='resume'||target==='contact'){openShortcut(target==='resume'?4:5);return;}
@@ -57,7 +70,7 @@ export default function Film() {
     const previous={...history.state};delete previous.portfolio;history.replaceState(previous,'',`#${target}`);
     shortcut.current=gsap.timeline().to('.story-journey,.project-journey',{opacity:0,duration:state.current.reduced?.1:.55}).call(()=>{
       setProject(null);setStory(null);setSelected(null);state.current.selected=-1;state.current.focus=0;state.current.suspended=false;
-      gsap.set(root.current,{opacity:1});gsap.set(curtain.current,{opacity:0});shortcutBusy.current=false;navigate(index);
+      gsap.set(root.current,{opacity:1});resetShortcutCurtain();shortcutBusy.current=false;navigate(index);
     });
   }
   function restoreOrigin(){
@@ -65,14 +78,14 @@ export default function Film() {
     state.current.suspended=false;
     const finish=()=>{
       setProject(null);setStory(null);setSelected(null);state.current.selected=-1;state.current.focus=0;
-      gsap.set(root.current,{opacity:1});gsap.set(curtain.current,{opacity:0});shortcutBusy.current=false;
+      gsap.set(root.current,{opacity:1});resetShortcutCurtain();shortcutBusy.current=false;
       lenis.current?.scrollTo(origin.current.scroll,{immediate:true,force:true});lenis.current?.start();
       requestAnimationFrame(()=>origin.current.focus?.focus({preventScroll:true}));
     };
     const outgoing=document.querySelectorAll('.story-journey,.project-journey');
     shortcut.current=gsap.timeline();
     if(outgoing.length)shortcut.current.to(outgoing,{opacity:0,duration:state.current.reduced?.1:.45},0);
-    shortcut.current.to(root.current,{opacity:1,duration:state.current.reduced?.1:.6},0).to(state.current,{focus:0,duration:state.current.reduced?.1:.6,ease:'power2.inOut'},0).to(curtain.current,{opacity:0,duration:state.current.reduced?.1:.4},0).call(finish);
+    shortcut.current.to(root.current,{opacity:1,duration:state.current.reduced?.1:.6},0).to(state.current,{focus:0,duration:state.current.reduced?.1:.6,ease:'power2.inOut'},0).to(curtain.current,{autoAlpha:0,duration:state.current.reduced?.1:.4},0).call(finish);
   }
   restoreRef.current=restoreOrigin;
   function requestReturn(){if(history.state?.portfolio)history.back();else restoreOrigin();}
@@ -80,13 +93,13 @@ export default function Film() {
     const pop=()=>{
       const route=history.state?.portfolio;
       if(!route){restoreRef.current();return;}
-      shortcut.current?.kill();shortcutBusy.current=false;
+      shortcut.current?.kill();resetShortcutCurtain();shortcutBusy.current=false;
       origin.current.kind=route.kind;
       lenis.current?.stop();setProject(route.view==='project'?route.index:null);setStory(route.view==='story'?route.index:null);
     };
     const previousRestoration=history.scrollRestoration;history.scrollRestoration='manual';
     window.addEventListener('popstate',pop);
-    return()=>{window.removeEventListener('popstate',pop);history.scrollRestoration=previousRestoration;shortcut.current?.kill();};
+    return()=>{window.removeEventListener('popstate',pop);history.scrollRestoration=previousRestoration;shortcut.current?.kill();resetShortcutCurtain();};
   },[]);
 
   useEffect(() => {
@@ -244,5 +257,5 @@ export default function Film() {
       </section>
       <div className={`focus-title ${selected?'visible':''}`} aria-live="polite"><span>INSIDE THE HEAD</span><h2>{selected}</h2>{selected&&<button onClick={closePreview} aria-label="Return to Inside the Head">Return to orbit&nbsp; ↙</button>}</div>
     </div>
-  </main><div ref={curtain} className="shortcut-curtain" aria-hidden="true"><svg viewBox="0 0 1000 700" preserveAspectRatio="none"><path d="M-50 590 C120 650 245 160 480 280 S785 640 1060 60"/></svg></div>{project!==null && createPortal(<ProjectJourney onNavigate={globalNavigate} initialIndex={project} onReturn={requestReturn} onContinue={()=>{history.replaceState({...history.state,portfolio:{view:'story',index:0,kind:origin.current.kind}},'','#act-03');setProject(null);setStory(0);}}/>,document.body)}{story!==null&&createPortal(<Continuation key={`${story}-${storyVisit}`} onNavigate={globalNavigate} initialChapter={story} returnLabel={origin.current.kind==='hero'?'HERO':origin.current.kind==='about'?'ABOUT':'ORBIT'} onReturn={requestReturn}/>,document.body)}</>;
+  </main><div ref={curtain} className="shortcut-curtain" aria-hidden="true"><svg viewBox="0 0 1000 700" preserveAspectRatio="none"><path pathLength="1" d="M-50 590 C120 650 245 160 480 280 S785 640 1060 60"/></svg></div>{project!==null && createPortal(<ProjectJourney onNavigate={globalNavigate} initialIndex={project} onReturn={requestReturn} onContinue={()=>{history.replaceState({...history.state,portfolio:{view:'story',index:0,kind:origin.current.kind}},'','#act-03');setProject(null);setStory(0);}}/>,document.body)}{story!==null&&createPortal(<Continuation key={`${story}-${storyVisit}`} onReady={revealShortcutDestination} onNavigate={globalNavigate} initialChapter={story} returnLabel={origin.current.kind==='hero'?'HERO':origin.current.kind==='about'?'ABOUT':'ORBIT'} onReturn={requestReturn}/>,document.body)}</>;
 }

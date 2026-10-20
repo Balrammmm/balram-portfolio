@@ -16,10 +16,11 @@ gsap.registerPlugin(ScrollTrigger,CustomEase);
 const flowEase=CustomEase.create('story-flow','0.22,1,0.36,1');
 const bounds=[0,1.6,3.4,6.1,9.5,11,12.5];
 const thinking=[['FINANCE','Where numbers meet human behaviour.','Markets interest me because information, incentives and uncertainty occupy the same system.'],['PHILOSOPHY','First principles before fashionable answers.','Question the premise. Make the reasoning visible. Stay willing to change your mind.']];
-export default function Continuation({initialChapter=0,returnLabel='ORBIT',onReturn,onNavigate}:{initialChapter?:number;returnLabel?:'HERO'|'ABOUT'|'ORBIT';onReturn:()=>void;onNavigate:(target:NavTarget)=>void}){
+export default function Continuation({initialChapter=0,returnLabel='ORBIT',onReturn,onNavigate,onReady}:{initialChapter?:number;returnLabel?:'HERO'|'ABOUT'|'ORBIT';onReturn:()=>void;onNavigate:(target:NavTarget)=>void;onReady?:()=>void}){
  const root=useRef<HTMLDivElement>(null),track=useRef<HTMLDivElement>(null),panels=useRef<(HTMLElement|null)[]>([]),smooth=useRef<Lenis|null>(null),motion=useRef<StoryMotion>({position:bounds[initialChapter],reduced:false,paused:false});
  const [chapter,setChapter]=useState(initialChapter),[thinkingStep,setThinkingStep]=useState(0),[proofIndex,setProofIndex]=useState(0),[phone,setPhone]=useState(false),[paused,setPaused]=useState(false),[loadThinking,setLoadThinking]=useState(initialChapter>=2);
  const exit=useRef<gsap.core.Tween|null>(null),closing=useRef(false),returnRef=useRef(onReturn);returnRef.current=onReturn;
+ const readyRef=useRef(onReady);readyRef.current=onReady;
  function close(){if(closing.current)return;closing.current=true;smooth.current?.stop();exit.current=gsap.to(root.current,{opacity:0,duration:motion.current.reduced?.1:.55,onComplete:()=>returnRef.current()});}
  function seekPosition(position:number){if(closing.current)return;smooth.current?.scrollTo((track.current!.offsetHeight-root.current!.clientHeight)*position/12.5,{duration:motion.current.reduced?0:1.2,easing:flowEase,force:true});}
  function seek(i:number){if(i<0||i>5)return;seekPosition(bounds[i]+(i===2?.32:.12));}
@@ -60,7 +61,7 @@ export default function Continuation({initialChapter=0,returnLabel='ORBIT',onRet
    // Lenis owns smoothing; a second scrub tween added lag to every button/scroll.
    const tween=gsap.fromTo(value,{position:0},{position:12.5,ease:'none',onUpdate:update,scrollTrigger:{trigger:content,scroller:el,start:'top top',end:'bottom bottom',scrub:true,invalidateOnRefresh:true}});
    value.position=entryPosition;update();
-   const refresh=requestAnimationFrame(()=>{ScrollTrigger.refresh();lenis.scrollTo((content.offsetHeight-el.clientHeight)*entryPosition/12.5,{immediate:true});tween.scrollTrigger?.update();tween.scrollTrigger?.getTween()?.progress(1);update();});
+   const refresh=requestAnimationFrame(()=>{ScrollTrigger.refresh();lenis.scrollTo((content.offsetHeight-el.clientHeight)*entryPosition/12.5,{immediate:true});tween.scrollTrigger?.update();tween.scrollTrigger?.getTween()?.progress(1);update();readyRef.current?.();});
    return()=>{cancelAnimationFrame(refresh);enter.kill();portalEnter?.kill();tween.scrollTrigger?.kill();tween.kill();gsap.ticker.remove(ticker);lenis.destroy();};
   },el);
   focusTimer=window.setTimeout(()=>el.querySelector<HTMLButtonElement>('.story-return')?.focus({preventScroll:true}),100);
